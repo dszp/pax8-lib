@@ -6,9 +6,8 @@
  * `audience` set to the API. Observed lifetime is 24 hours. The token's own `exp` claim drives
  * refresh, falling back to `expires_in`, so a change to the lifetime needs no code change.
  *
- * Pax8 API credentials carry the account's full permission set; Pax8 offers no way to narrow one.
- * This library is read-only by construction (see `http.ts`), but the secret itself is not: store it
- * where only the process that needs it can read it.
+ * A Pax8 API credential is not limited to reads. This library is read-only by construction (see
+ * `http.ts`), but the secret itself is not: store it where only the process that needs it can read it.
  */
 import { Pax8ApiError } from './errors.js';
 
@@ -51,7 +50,7 @@ export interface IssuedToken {
 
 /**
  * What a token is allowed to do, without the token itself or the ids of the user it acts as.
- * Use it to audit a credential: Pax8 credentials are not scoped, so expect the full set.
+ * Use it to audit what a credential's token carries.
  */
 export interface TokenClaims {
   /** The `scope` claim, split on spaces. */

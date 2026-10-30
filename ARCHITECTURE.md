@@ -24,9 +24,8 @@ barrel doesn't export it, so neither TypeScript nor plain JavaScript code can se
 request through this package. A test pins the read client's exact method list, and another
 checks that every request it sends is a GET.
 
-This matters more for Pax8 than for most APIs. A Pax8 API credential carries the whole account's
-permissions: in testing, its token listed 84 scopes, including `order_writer`, `order_canceller`
-and `user_admin`. Pax8 has no way to issue a narrower one.
+This matters because a Pax8 API credential isn't limited to reads, so the library is the layer
+that makes a read-only consumer read-only.
 
 ## Adding a write client
 

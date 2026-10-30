@@ -28,8 +28,8 @@ import or a `Buffer` fails the build. Use `fetch`, `crypto.subtle`, `TextEncoder
 ### 2. The transport stays private and GET-only
 
 Don't export `Pax8Http` from `src/index.ts`, and never add a mutating method to `Pax8ReadClient`.
-A Pax8 credential can place and cancel orders, so the guarantee that this package can't is only
-as good as the transport being unreachable.
+A Pax8 credential isn't limited to reads, so this package's read-only guarantee is only as good as
+the transport being unreachable.
 
 If write support is added, it goes in a separate `Pax8WriteClient` with its own transport module,
 one endpoint at a time. That transport reuses `TokenSource`, `errorFromResponse`, `backoffDelayMs`

@@ -31,10 +31,9 @@ pnpm add @dszp/pax8-lib
 In Pax8, go to **Integrations > API credentials** and select **Create API credential**. Pax8
 shows a client id and a client secret.
 
-A Pax8 API credential carries your account's full permission set, including placing and
-cancelling orders and managing users. Pax8 offers no way to narrow it. This library sends only GET
-requests, but the secret can do more than the library does. Store it in a secret manager or a
-Worker secret, give it to one process only, and never commit it.
+A Pax8 API credential can do more than read. This library sends only GET requests, but the
+secret itself isn't limited to that. Store it in a secret manager or a Worker secret, give it to one
+process only, and never commit it.
 
 ## Use it
 
@@ -111,7 +110,7 @@ new Pax8ReadClient({
 });
 ```
 
-To check what a credential is allowed to do, decode its token with `tokenClaims`. It returns the
+To see which scopes a credential's token carries, decode it with `tokenClaims`. It returns the
 scopes and the credential's name, and leaves out the token and the user ids:
 
 ```ts
