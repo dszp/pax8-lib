@@ -1,6 +1,6 @@
 {
   "name": "@dszp/pax8-lib",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Portable, Node-free, read-only client for the Pax8 Partner API: client-credentials token caching, 429 backoff, complete-list walkers checked against totalElements, and subscription history. Runs unchanged in a Cloudflare Worker, Node, or the browser.",
   "type": "module",
   "license": "MIT",

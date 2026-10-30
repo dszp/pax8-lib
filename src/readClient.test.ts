@@ -48,6 +48,12 @@ describe('Pax8ReadClient: reads', () => {
     expect(await c.getProductPricing(id, { companyId: uuid(2) })).toEqual([{ billingTerm: 'Monthly', rates: [] }]);
   });
 
+  it('returns an empty history, not undefined, for an id Pax8 answers with {}', async () => {
+    // Observed live: history requested by a currentSubscriptionId (not the lineage id) is `{}`.
+    const f = mockFetch({ handler: () => ({ body: {} }) });
+    expect(await client(f).getSubscriptionHistory(uuid(1))).toEqual([]);
+  });
+
   it('refuses a non-UUID id before any request, in a path or a filter', async () => {
     const f = mockFetch();
     const c = client(f);

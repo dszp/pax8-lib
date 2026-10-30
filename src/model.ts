@@ -218,9 +218,15 @@ export interface Subscription {
   companyId?: Pax8Id;
   productId?: Pax8Id;
   productName?: string;
-  /** The vendor's own id for the subscription (for Microsoft, the subscription id in the tenant). */
+  /**
+   * The vendor's own id for the subscription. For Microsoft this is NOT any of the ids Graph shows
+   * in the tenant (`id`, `commerceSubscriptionId`, `ocpSubscriptionId`); join on `vendorSkuId`.
+   */
   vendorSubscriptionId?: string;
-  /** The vendor's SKU id. Returned by the single-subscription route. */
+  /**
+   * The vendor's SKU id, returned by the single-subscription route only. For Microsoft it is the
+   * SKU's `skuId` in the tenant (Graph `subscribedSkus`), so it joins Pax8 to tenant licensing.
+   */
   vendorSkuId?: string;
   quantity?: number;
   startDate?: string;
@@ -247,7 +253,7 @@ export interface Subscription {
  * Every record repeats the subscription's id, so the id does not identify a record. Records are
  * not change events: there is no action type and no quantity delta, so a change is the difference
  * between adjacent records. A new record also starts at each billing-period boundary even when
- * nothing changed.
+ * nothing changed. Records carry no `vendorSubscriptionId`; read it from the subscription itself.
  */
 export type SubscriptionHistoryRecord = Subscription;
 
@@ -335,6 +341,10 @@ export interface ListInvoicesOptions extends PageOptions {
 
 export interface InvoiceItem {
   id?: Pax8Id;
+  /**
+   * The PO number entered on the order or subscription, or `N/A`. Subscriptions, their history and
+   * orders don't carry it; invoice and draft-invoice items are where the API exposes it.
+   */
   purchaseOrderNumber?: string;
   type?: 'rebate' | 'prorate' | 'subscription' | 'payment-credit' | 'one-time' | 'service-charge' | 'service-credit' | 'invoice-credit';
   companyId?: Pax8Id;

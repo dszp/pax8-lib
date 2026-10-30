@@ -107,7 +107,7 @@ export class Pax8ReadClient {
 
   /** The details an order for this product must supply. */
   async getProductProvisionDetails(productId: Pax8Id): Promise<ProvisioningDetail[]> {
-    return (await this.#http.get<Unpaged<ProvisioningDetail>>(`/products/${idSegment(productId)}/provision-details`)).content;
+    return this.#unpaged<ProvisioningDetail>(`/products/${idSegment(productId)}/provision-details`);
   }
 
   async getProductDependencies(productId: Pax8Id): Promise<Dependencies> {
@@ -117,7 +117,7 @@ export class Pax8ReadClient {
   /** Price rows per billing term and commitment. With `companyId`, that company's pricing. */
   async getProductPricing(productId: Pax8Id, opts: { companyId?: Pax8Id } = {}): Promise<Pricing[]> {
     const query = { companyId: opts.companyId === undefined ? undefined : idSegment(opts.companyId) };
-    return (await this.#http.get<Unpaged<Pricing>>(`/products/${idSegment(productId)}/pricing`, query)).content;
+    return this.#unpaged<Pricing>(`/products/${idSegment(productId)}/pricing`, query);
   }
 
   // ---- orders -----------------------------------------------------------------------------------
@@ -156,9 +156,12 @@ export class Pax8ReadClient {
   /**
    * Every record of a subscription, as Pax8 returns them (newest first in testing). Not paged.
    * See {@link SubscriptionHistoryRecord} for what a record is and is not.
+   *
+   * Pass the lineage id (`id` from a list or a get), not `currentSubscriptionId`: Pax8 answers a
+   * current id with an empty body, which this returns as `[]`.
    */
   async getSubscriptionHistory(subscriptionId: Pax8Id): Promise<SubscriptionHistoryRecord[]> {
-    return (await this.#http.get<Unpaged<SubscriptionHistoryRecord>>(`/subscriptions/${idSegment(subscriptionId)}/history`)).content;
+    return this.#unpaged<SubscriptionHistoryRecord>(`/subscriptions/${idSegment(subscriptionId)}/history`);
   }
 
   // ---- invoices ---------------------------------------------------------------------------------
@@ -218,6 +221,11 @@ export class Pax8ReadClient {
   }
 
   // ---- internals --------------------------------------------------------------------------------
+
+  /** The `content` of a `{ content }` response; an empty body (`{}`) is an empty list. */
+  async #unpaged<T>(path: string, query?: Query): Promise<T[]> {
+    return (await this.#http.get<Partial<Unpaged<T>> | undefined>(path, query))?.content ?? [];
+  }
 
   async #page<T>(path: string, filters: object, opts: PageOptions): Promise<Page<T>> {
     return this.#http.get<Page<T>>(path, { ...(filters as Query), ...pageQuery(opts) });

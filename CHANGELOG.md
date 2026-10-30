@@ -7,6 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-10-30
+
+### Fixed
+
+- `getSubscriptionHistory`, `getProductPricing` and `getProductProvisionDetails` return `[]`, not
+  `undefined`, when Pax8 answers with an empty body. Pax8 does that for history requested by a
+  `currentSubscriptionId` rather than the lineage id.
+
+### Changed
+
+- The `Subscription` docs say how Microsoft subscriptions join to tenant licensing: by
+  `vendorSkuId`, which is the SKU's Graph `skuId`. `vendorSubscriptionId` matches none of the ids
+  Graph shows in the tenant.
+
 ## [0.1.1] — 2026-10-30
 
 No API changes. This is the first version published by the release workflow through npm trusted
