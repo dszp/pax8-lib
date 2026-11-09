@@ -14,3 +14,7 @@ CLAUDE.md
 docs/
 # Local scratch files (never published)
 .TEMP-*
+
+# Claude Code per-user files: they can hold tokens copied from approved commands
+**/.claude/settings.local.json
+**/CLAUDE.local.md
